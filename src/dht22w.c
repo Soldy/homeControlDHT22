@@ -26,6 +26,32 @@ float tempetureout = 0;
 float humidityout = 0;
 int resultstatus = 0;
 
+void clearScreen(void){
+    printf("\033[2J");
+    printf("\033[H");
+}
+
+void tableMake(void){
+    clearScreen();
+    printf("\033[2;2H ------------------ ");
+    printf("\033[3;6H  Hunidity ");
+    printf("\033[4;5H  Tempeture ");
+    printf("\033[5;8H  Result ");
+    printf("\033[6;6H  Packages ");
+    printf("\033[7;8H  Errors ");
+    printf("\033[8;2H ------------------ ");
+    printf("\033[3;28H%%");
+    printf("\033[4;28HC");
+}
+
+void tableResult(){
+    printf("\033[3;20H %.2f", humidityout);
+    printf("\033[4;20H %.2f", tempetureout);
+    printf("\033[5;20H %d ", resultstatus);
+    printf("\033[6;20H %d ", packages);
+    printf("\033[7;20H %d ", errors);
+    printf("\033[7;26H - %.2f %% ", (((float)(errors)/(float)(packages))*100));
+}
 
 void read_dht_data(){
     uint8_t laststate = HIGH;
@@ -84,6 +110,7 @@ void read_dht_data(){
          errors++;
      }
 }
+
 int main( void ){
     if ( wiringPiSetup() == -1 )
         exit( 1 );
@@ -93,6 +120,8 @@ int main( void ){
              tableMake();
          }
          read_dht_data();
+         tableResult();
+         fflush(stdout);
          usleep( 2000000 ); /* wait 2 seconds before next read */
          tenround++;
     }
