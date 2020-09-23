@@ -25,6 +25,7 @@ int tenround = 0;
 float tempetureout = 0;
 float humidityout = 0;
 int resultstatus = 0;
+char stopfile[] ="../var/dht.stop";
 
 void clearScreen(void){
     printf("\033[2J");
@@ -111,14 +112,24 @@ void read_dht_data(){
      }
 }
 
+void checkStop(void){
+    if ((fp = fopen(stopfile, "r")) != NULL) {
+        remove(stopfile);
+        quit();
+    }
+}
+ 
+ 
 int main( void ){
     if ( wiringPiSetup() == -1 )
         exit( 1 );
+    tableMake();
     while ( 1 ){
          if (tenround > 9){
              tenround=0;
              tableMake();
          }
+         checkStop();
          read_dht_data();
          tableResult();
          fflush(stdout);
