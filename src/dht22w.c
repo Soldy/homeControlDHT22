@@ -26,6 +26,7 @@ float tempetureout = 0;
 float humidityout = 0;
 int resultstatus = 0;
 char stopfile[] ="../var/dht.stop";
+char logfile[] ="../log/new.log";
 
 void clearScreen(void){
     printf("\033[2J");
@@ -53,6 +54,21 @@ void tableResult(){
     printf("\033[7;20H %d ", errors);
     printf("\033[7;26H - %.2f %% ", (((float)(errors)/(float)(packages))*100));
 }
+
+void logAppend(){
+    fp = fopen(logfile, "a+");
+    fprintf(
+        fp, 
+        "{\"U\":%d,\"H\":%.1f,\"T\":%.1f,\"R\":%d}\n", 
+        (int)time(NULL), 
+        humidityout, 
+        tempetureout,
+        resultstatus
+    );
+    fclose(fp); 
+
+}
+
 
 void read_dht_data(){
     uint8_t laststate = HIGH;
