@@ -118,6 +118,10 @@ void checkStop(void){
         quit();
     }
 }
+void quit(void){
+    remove(pidfile);
+    exit(0);
+}
  
  
 int main( void ){
@@ -136,6 +140,7 @@ int main( void ){
          usleep( 2000000 ); /* wait 2 seconds before next read */
          tenround++;
     }
-    return quit();
+    quit();
+    return (0);
 }
 
