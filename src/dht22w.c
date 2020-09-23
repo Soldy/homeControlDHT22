@@ -29,6 +29,10 @@ char stopfile[] ="../var/dht.stop";
 char logfile[] ="../log/new.log";
 char pidfile[] ="../var/run/dht.pid";
 
+void quit(void){
+    remove(pidfile);
+    exit(0);
+}
 void clearScreen(void){
     printf("\033[2J");
     printf("\033[H");
@@ -69,7 +73,6 @@ void logAppend(){
     fclose(fp); 
 
 }
-
 
 void read_dht_data(){
     uint8_t laststate = HIGH;
@@ -128,6 +131,14 @@ void read_dht_data(){
          errors++;
      }
 }
+
+void checkRun(void){
+    if ((fp = fopen(pidfile, "r")) != NULL) {
+        printf("already running \n");
+        exit(1);
+    }
+}
+
 void writeRun(void){
     fp = fopen(pidfile, "w+");
     fprintf(fp, "%d\n", getpid());
@@ -136,15 +147,10 @@ void writeRun(void){
 
 void checkStop(void){
     if ((fp = fopen(stopfile, "r")) != NULL) {
-        remove(stopfile);
+        remove("../var/dht.stop");
         quit();
     }
 }
-void quit(void){
-    remove(pidfile);
-    exit(0);
-}
- 
  
 int main( void ){
     if ( wiringPiSetup() == -1 )
