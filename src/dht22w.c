@@ -25,8 +25,8 @@ int tenround = 0;
 float tempetureout = 0;
 float humidityout = 0;
 int resultstatus = 0;
-char stopfile[] ="../var/dht.stop";
-char logfile[] ="../log/new.log";
+char stopfile[] ="../var/lib/dht22w/dht.stop";
+char logfile[] ="../var/lib/dht22w/log/data.log";
 char pidfile[] ="../var/run/dht.pid";
 
 void quit(void){
