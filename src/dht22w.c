@@ -27,6 +27,7 @@ float humidityout = 0;
 int resultstatus = 0;
 char stopfile[] ="../var/dht.stop";
 char logfile[] ="../log/new.log";
+char pidfile[] ="../var/run/dht.pid";
 
 void clearScreen(void){
     printf("\033[2J");
@@ -127,6 +128,11 @@ void read_dht_data(){
          errors++;
      }
 }
+void writeRun(void){
+    fp = fopen(pidfile, "w+");
+    fprintf(fp, "%d\n", getpid());
+    fclose(fp);
+}
 
 void checkStop(void){
     if ((fp = fopen(stopfile, "r")) != NULL) {
@@ -143,6 +149,7 @@ void quit(void){
 int main( void ){
     if ( wiringPiSetup() == -1 )
         exit( 1 );
+    writeRun();
     tableMake();
     while ( 1 ){
          if (tenround > 9){
@@ -152,6 +159,7 @@ int main( void ){
          checkStop();
          read_dht_data();
          tableResult();
+         logAppend();
          fflush(stdout);
          usleep( 2000000 ); /* wait 2 seconds before next read */
          tenround++;
